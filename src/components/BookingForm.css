@@ -1,0 +1,10 @@
+#booking-form {
+    font-size: 25px;
+}
+
+#booking-form label {
+    display: block;
+}
+
+@media (min-width: 1024px) {
+  }

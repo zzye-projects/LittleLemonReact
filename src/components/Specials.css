@@ -1,0 +1,21 @@
+
+#specials-section > div:last-child {
+    display:grid;
+    grid-template-columns: 1fr;
+  }
+  
+#specials-section > div:first-child {
+    margin-top: 50px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+
+@media (min-width: 768px) {
+  #specials-section > div:last-child {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+  }
+}
