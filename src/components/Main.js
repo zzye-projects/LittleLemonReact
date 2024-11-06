@@ -8,13 +8,11 @@ import { Routes, Route } from 'react-router-dom';
 import { useReducer } from 'react';
 
 const Main = () => {
-    const initializeTimes =  ['17:00', '18:00', '19.00', '20:00', '21:00', '22:00'];
+    const initializeTimes = () => ['17:00', '18:00', '19:00', '20:00', '21:00', '22:00'];
     const updateTimes = (state, {bookingTime, bookingDate}) => {
-        const newTimes = state.filter(time => time !== bookingTime);
-        alert(`New Times after filtering: ${newTimes}`);        
-        return newTimes;
+        return state.filter(time => time !== bookingTime);
     }
-    const [availableTimes, changeAvailableTimes] = useReducer(updateTimes, initializeTimes);
+    const [availableTimes, changeAvailableTimes] = useReducer(updateTimes, initializeTimes());
 
     return (
     <Routes>
