@@ -8,8 +8,13 @@ describe('BookingForm Component', () => {
     beforeEach(() => {
         mockAvailableTimes = ['17:00', '18:00', '19.00', '20:00', '21:00', '22:00'];
         mockChangeAvailableTimes = jest.fn();
+        mockSubmitForm = jest.fn();
 
-        render(<BookingForm availableTimes={mockAvailableTimes} changeAvailableTimes={mockChangeAvailableTimes} />);
+
+        render(<BookingForm 
+            availableTimes={mockAvailableTimes} 
+            changeAvailableTimes={mockChangeAvailableTimes}
+            submitForm={mockSubmitForm} />);
     });
 
     afterEach(cleanup);
@@ -40,7 +45,7 @@ describe('BookingForm Component', () => {
     });
 
     test('Renders the submit button', () => {
-        const submitButton = screen.getByText("Make Your reservation");
+        const submitButton = screen.getByText("Make Your Reservation");
         expect(submitButton).toBeInTheDocument();
     });
 });

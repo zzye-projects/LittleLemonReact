@@ -1,38 +1,55 @@
-import { render, screen, cleanup, fireEvent } from '@testing-library/react';
+import { render, screen, cleanup, fireEvent, waitFor } from '@testing-library/react';
 import Main from './Main';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, useNavigate } from 'react-router-dom';
+import { submitAPI, fetchAPI } from './api';
+
+jest.mock('./api.js', () => ({
+    fetchAPI: jest.fn(),
+    submitAPI: jest.fn(),
+}));
+jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'),
+    useNavigate: jest.fn()
+}));
 
 describe('BookingForm Component', () => {
     beforeEach(() => {
-        render( 
-        <MemoryRouter initialEntries={['/booking']}>
-            <Main />
-        </MemoryRouter>);
+        submitAPI.mockClear();
+        fetchAPI.mockClear();
+        useNavigate.mockClear();
     });
     afterEach(cleanup);
 
     test('Test the initializeTimes', () => {
-        const availableTimes = ['17:00', '18:00', '19:00', '20:00', '21:00', '22:00'];
-        availableTimes.forEach(time => expect(screen.getByText(time)).toBeInTheDocument());
+        const initialTimes = ['17:00', '18:00', '19:00', '20:00', '21:00', '22:00'];
+        fetchAPI.mockReturnValueOnce(initialTimes);
+        render( 
+            <MemoryRouter initialEntries={['/booking']}>
+                <Main />
+            </MemoryRouter>);
+        initialTimes.forEach(time => expect(screen.getByText(time)).toBeInTheDocument());
     });
 
-    test('Test the changeAvailableTimes function', () => {
-        expect(screen.getByText('19:00')).toBeInTheDocument();
+    test('Test the changeAvailableTimes function', async () => {
+        const initialTimes = ['17:00', '18:00', '19:00', '20:00', '21:00', '22:00'];
+        fetchAPI.mockReturnValueOnce(initialTimes);
+        render( 
+            <MemoryRouter initialEntries={['/booking']}>
+                <Main />
+            </MemoryRouter>);
 
-        const dateInput = screen.getByLabelText(/choose date/i);
-        fireEvent.change(dateInput, { target: { value: '2024-11-15' } });
+        initialTimes.forEach(time => {
+            expect(screen.getByText(time)).toBeInTheDocument()});
+        const newTimes = ['20:30', '21:30', '22:30'];
+        fetchAPI.mockReturnValueOnce(newTimes);
+        const dateInput = screen.getByLabelText("Choose date *:");       
 
-        // Simulate user selecting a time
-        const timeSelect = screen.getByLabelText(/choose time/i);
-        fireEvent.change(timeSelect, { target: { value: '19:00' } });
+        await waitFor(() => {
+            fireEvent.change(dateInput, { target: { value: '2024-11-17' } });
+            newTimes.forEach(time => expect(screen.getByText(time)).toBeInTheDocument());
+            initialTimes.forEach(time => expect(screen.queryByText(time)).toBeNull());
+        })
 
-        // Simulate form submission
-        const submitButton = screen.getByText(/make your reservation/i);
-        fireEvent.click(submitButton);
-
-        expect(screen.queryByText('19:00')).toBeNull();
-        expect(screen.getByText('20:00')).toBeInTheDocument();
-        expect(screen.getByText('17:00')).toBeInTheDocument();
     });
 });
 
