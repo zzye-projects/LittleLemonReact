@@ -6,7 +6,7 @@ const BookingForm = ({availableTimes, changeAvailableTimes, submitForm}) => {
     const initialValues = {
         bookingDate: "",
         bookingTime: "",
-        numGuests: 1,
+        numGuests: "",
         occasion: ""
     };
     const validationSchema = Yup.object({
@@ -17,9 +17,9 @@ const BookingForm = ({availableTimes, changeAvailableTimes, submitForm}) => {
             .required('Time is required'),
         numGuests: Yup.number()
             .required('Number of guests is required')
-            .min(1, 'Must have at least 1 guest')
+            .min(2, 'Must have at least 2 guests')
             .max(10, 'Cannot exceed 10 guests'),
-        occasion: Yup.string().oneOf(['Anniversary', 'Birthday'], 'Invalid occasion')
+        occasion: Yup.string().oneOf(['anniversary', 'birthday'], 'Invalid occasion')
     });
 
     return (
@@ -27,7 +27,6 @@ const BookingForm = ({availableTimes, changeAvailableTimes, submitForm}) => {
             initialValues={initialValues}
             validationSchema={validationSchema}
             onSubmit={(values, { setSubmitting }) => {
-                console.log("Formik onSubmit called with values:", values);
                 submitForm(values);
                 setSubmitting(false);
             }}>
@@ -63,13 +62,12 @@ const BookingForm = ({availableTimes, changeAvailableTimes, submitForm}) => {
                     <Field 
                         type="number" 
                         name="numGuests" 
-                        placeholder='1' 
-                        min="1" 
+                        min="2" 
                         max="10" />
                     <ErrorMessage name="numGuests" component="div" className="error" />
                 </label>
                 <label>
-                    Occassion:
+                    Occasion:
                     <Field as="select" name="occasion">
                             <option value="" label="Select occasion" />
                             <option value="anniversary" label="Anniversary" />

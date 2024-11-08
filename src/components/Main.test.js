@@ -48,7 +48,7 @@ describe('BookingForm Component', () => {
             fireEvent.change(dateInput, { target: { value: '2024-11-17' } });
             newTimes.forEach(time => expect(screen.getByText(time)).toBeInTheDocument());
             initialTimes.forEach(time => expect(screen.queryByText(time)).toBeNull());
-        })
+        });
 
     });
 });
